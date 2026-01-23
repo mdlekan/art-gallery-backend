@@ -32,6 +32,12 @@ public class ArtWork {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private boolean sold = false;
+
+    @OneToOne(mappedBy = "artwork")
+    private Order order;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();

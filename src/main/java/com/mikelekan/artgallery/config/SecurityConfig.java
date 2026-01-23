@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static org.springframework.http.HttpMethod.POST;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -36,8 +38,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()           // Login/register
                         .requestMatchers("/api/artworks").permitAll()          // View gallery
-                        .requestMatchers("POST", "/api/orders").permitAll()    // ← Place order (public)
-                        .anyRequest().authenticated()                           // Everything else protected
+                        .requestMatchers(POST, "/api/orders").permitAll()
+                        .requestMatchers(POST, "/api/customers").permitAll()
+                        .anyRequest().authenticated()  // Everything else protected
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

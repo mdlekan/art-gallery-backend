@@ -7,7 +7,6 @@ import com.mikelekan.artgallery.service.S3Service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -21,7 +20,8 @@ public class ArtWorkController
     private final S3Service s3Service;
     private final ArtWorkRepository artWorkRepository;
 
-    public ArtWorkController(ArtworkService artworkService, S3Service s3Service, ArtWorkRepository artWorkRepository)
+    public ArtWorkController(ArtworkService artworkService, S3Service s3Service,
+                             ArtWorkRepository artWorkRepository)
             throws IOException
     {
         this.artworkService = artworkService;

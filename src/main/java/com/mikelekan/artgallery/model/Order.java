@@ -21,6 +21,10 @@ public class Order {
     @JoinColumn(name = "artwork_id", nullable = false)
     private ArtWork artwork;
 
+    @ManyToOne
+    @JoinColumn(name = "customer_id")  // ← This creates customer_id column in orders table
+    private Customer customer;
+
     // Customer info
     @Column(nullable = false)
     private String customerName;

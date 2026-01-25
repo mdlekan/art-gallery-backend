@@ -138,17 +138,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
+        String method = request.getMethod();
 
         System.out.println("=== JWT FILTER DEBUG ===");
         System.out.println("Path: " + path);
-        System.out.println("Method: " + request.getMethod());
+        System.out.println("Method: " + method);
 
         boolean shouldSkip = path.startsWith("/api/auth/") ||
-                path.equals("/api/customers");
+                (path.startsWith("/api/orders") && method.equals("POST"));
 
         System.out.println("Should skip filter: " + shouldSkip);
         System.out.println("========================");
 
         return shouldSkip;
     }
+
 }

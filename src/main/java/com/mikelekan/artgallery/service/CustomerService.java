@@ -1,6 +1,9 @@
 package com.mikelekan.artgallery.service;
 
+import com.mikelekan.artgallery.dto.CustomerDTO;
+import com.mikelekan.artgallery.dto.OrderResponse;
 import com.mikelekan.artgallery.model.Customer;
+import com.mikelekan.artgallery.model.Order;
 import com.mikelekan.artgallery.repository.CustomerRespository;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -30,8 +33,36 @@ public class CustomerService
         return customerRespository.findAll();
     }
 
-    public void addCustomer(Customer inCustomer)
+    public CustomerDTO addCustomer(CustomerDTO inCustomerDTO)
     {
-        customerRespository.save(inCustomer);
+        Customer customer = Customer.builder()
+                .email(inCustomerDTO.getEmail())
+                .addressLine1(inCustomerDTO.getAddressLine1())
+                .city(inCustomerDTO.getCity())
+                .state(inCustomerDTO.getState())
+                .lastName(inCustomerDTO.getLastName())
+                .firstName(inCustomerDTO.getFirstName())
+                .zipCode(inCustomerDTO.getZipCode())
+                .emailOptIn(inCustomerDTO.getEmailOptIn())
+                .email(inCustomerDTO.getEmail())
+                .build();
+
+        customerRespository.save(customer);
+
+        return mapToResponse(customer);
+    }
+
+    private CustomerDTO mapToResponse(Customer inCustomer) {
+
+        return CustomerDTO.builder()
+                .firstName(inCustomer.getFirstName())
+                .lastName(inCustomer.getLastName())
+                .addressLine1(inCustomer.getAddressLine1())
+                .addressLine2(inCustomer.getAddressLine2())
+                .city(inCustomer.getCity())
+                .zipCode(inCustomer.getZipCode())
+                .email(inCustomer.getEmail())
+                .emailOptIn(inCustomer.getEmailOptIn())
+                .build();
     }
 }

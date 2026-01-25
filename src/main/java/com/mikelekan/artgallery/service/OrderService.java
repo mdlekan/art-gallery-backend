@@ -7,7 +7,9 @@ import com.mikelekan.artgallery.model.Order;
 import com.mikelekan.artgallery.model.OrderStatus;
 import com.mikelekan.artgallery.repository.ArtWorkRepository;
 import com.mikelekan.artgallery.repository.OrderRepository;
+import com.stripe.exception.StripeException;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.logging.Log;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -19,10 +21,16 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ArtWorkRepository artWorkRepository;
+    private final PaymentService paymentService;
     // private final EmailService emailService;  // Add later for confirmations
 
     @Transactional
-    public OrderResponse createOrder(OrderRequest request) {
+    public OrderResponse createOrder(OrderRequest request) throws StripeException {
+
+        if (request.getArtworkId() == null)
+        {
+            throw new IllegalArgumentException("Order must contain at least one artwork");
+        }
         // 1. Find artwork
         ArtWork artwork = artWorkRepository.findById(request.getArtworkId())
                 .orElseThrow(() -> new RuntimeException("Artwork not found"));
@@ -54,6 +62,17 @@ public class OrderService {
         // For now, we'll do it immediately
         artwork.setSold(true);
         artWorkRepository.save(artwork);
+
+        try{
+            String clientSecret = paymentService.createPaymentIntent(savedOrder);
+            savedOrder.setPaymentIntentId(clientSecret);
+        }
+        catch (StripeException e)
+        {
+//            Log log = new Log
+//            log.error("Failed to create payment intent", e);
+            throw new RuntimeException("Payment initialization failed");
+        }
 
         // 5. Send confirmation email (implement later)
         // emailService.sendOrderConfirmation(savedOrder);

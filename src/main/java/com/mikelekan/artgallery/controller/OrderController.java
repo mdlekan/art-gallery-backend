@@ -3,6 +3,7 @@ package com.mikelekan.artgallery.controller;
 import com.mikelekan.artgallery.dto.OrderRequest;
 import com.mikelekan.artgallery.dto.OrderResponse;
 import com.mikelekan.artgallery.service.OrderService;
+import com.stripe.exception.StripeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class OrderController {
 
     // Public endpoint - customers can place orders
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest) throws StripeException {
         OrderResponse order = orderService.createOrder(orderRequest);
         return ResponseEntity.ok(order);
     }

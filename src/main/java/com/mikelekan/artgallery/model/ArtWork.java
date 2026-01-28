@@ -1,9 +1,9 @@
 package com.mikelekan.artgallery.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import lombok.*;
 
 @Entity
 @Table(name = "artworks")
@@ -12,34 +12,36 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ArtWork {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class ArtWork
+{
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private String title;
+	@Column(nullable = false)
+	private String title;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+	@Column(columnDefinition = "TEXT")
+	private String description;
 
-    private String artist;
+	private String artist;
 
-    private String imageUrl;
+	private String imageUrl;
 
-    private BigDecimal price;
+	private BigDecimal price;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+	@Column(name = "created_at")
+	private LocalDateTime createdAt;
 
-    @Column(nullable = false)
-    private boolean sold = false;
+	@Column(nullable = false)
+	private boolean sold = false;
 
-    @OneToOne(mappedBy = "artwork")
-    private Order order;
+	@OneToOne(mappedBy = "artwork")
+	private Order order;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
+	@PrePersist
+	protected void onCreate()
+	{
+		this.createdAt = LocalDateTime.now();
+	}
 }

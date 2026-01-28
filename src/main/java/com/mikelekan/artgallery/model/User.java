@@ -1,13 +1,12 @@
 package com.mikelekan.artgallery.model;
 
 import jakarta.persistence.*;
+import java.util.Collection;
+import java.util.List;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -16,48 +15,55 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User implements UserDetails {
+public class User implements UserDetails
+{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String userName;
+	@Column(nullable = false, unique = true)
+	private String userName;
 
-    @Column(nullable = false)
-    private String password; // Added required field
+	@Column(nullable = false)
+	private String password; // Added required field
 
-    // --- UserDetails Methods ---
+	// --- UserDetails Methods ---
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        // For now, giving every user a basic "USER" role
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-    }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities()
+	{
+		// For now, giving every user a basic "USER" role
+		return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+	}
 
-    @Override
-    public String getUsername() {
-        return this.userName;
-    }
+	@Override
+	public String getUsername()
+	{
+		return this.userName;
+	}
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+	@Override
+	public boolean isAccountNonExpired()
+	{
+		return true;
+	}
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+	@Override
+	public boolean isAccountNonLocked()
+	{
+		return true;
+	}
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+	@Override
+	public boolean isCredentialsNonExpired()
+	{
+		return true;
+	}
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+	@Override
+	public boolean isEnabled()
+	{
+		return true;
+	}
 }

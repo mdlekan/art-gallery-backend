@@ -14,39 +14,36 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CustomerDTO
 {
-    @NotBlank(message = "First Name must be provided")
-    @Size(min = 2, max = 50)
-    private String firstName;
+	@NotBlank(message = "First Name must be provided")
+	@Size(min = 2, max = 50)
+	private String firstName;
 
-    @NotBlank(message = "Last Name must be provided")
-    @Size(min = 2, max = 50)
-    private String lastName;
+	@NotBlank(message = "Last Name must be provided")
+	@Size(min = 2, max = 50)
+	private String lastName;
 
-    @NotBlank(message = "Street Address must be provided")
-    @Size(min = 2, max = 100)
-    private String addressLine1;
+	@NotBlank(message = "Street Address must be provided")
+	@Size(min = 2, max = 100)
+	private String addressLine1;
 
-    @Size(min = 2, max = 100)
-    private String addressLine2;
+	@Size(min = 2, max = 100)
+	private String addressLine2;
 
+	@Size(min = 2, max = 50)
+	@NotBlank(message = "City must be provided")
+	private String city;
 
-    @Size(min = 2, max = 50)
-    @NotBlank(message = "City must be provided")
-    private String city;
+	@Size(min = 2, max = 50)
+	@NotBlank(message = "State must be provided")
+	private String state;
 
+	@Size(min = 2, max = 5)
+	@NotBlank(message = "Zip Code must provided")
+	private String zipCode;
 
-    @Size(min = 2, max = 50)
-    @NotBlank(message = "State must be provided")
-    private String state;
+	@Email(message = "Email must be valid")
+	@NotBlank(message = "Email must be provided")
+	private String email;
 
-
-    @Size(min = 2, max = 5)
-    @NotBlank(message = "Zip Code must provided")
-    private String zipCode;
-
-    @Email(message = "Email must be valid")
-    @NotBlank(message = "Email must be provided")
-    private String email;
-
-    private Boolean emailOptIn;
+	private Boolean emailOptIn;
 }

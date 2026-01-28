@@ -1,13 +1,13 @@
-//package com.mikelekan.artgallery;
+// package com.mikelekan.artgallery;
 //
-//import org.junit.jupiter.api.Test;
-//import org.springframework.boot.test.context.SpringBootTest;
+// import org.junit.jupiter.api.Test;
+// import org.springframework.boot.test.context.SpringBootTest;
 //
-//@SpringBootTest
-//class ArtGalleryBackendApplicationTests {
+// @SpringBootTest
+// class ArtGalleryBackendApplicationTests {
 //
-//    @Test
-//    void contextLoads() {
-//    }
+// @Test
+// void contextLoads() {
+// }
 //
-//}
+// }

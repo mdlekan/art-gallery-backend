@@ -1,0 +1,66 @@
+package com.mikelekan.artgallery.service.vendors;
+
+import java.io.IOException;
+import java.time.Duration;
+import java.util.UUID;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+
+@Service
+public class S3Service
+{
+	private final S3Client s3Client;
+	private final S3Presigner s3Presigner; // Add this
+
+	@Value("${aws_bucket}")
+	private String bucketName;
+
+	// Constructor Injection
+	public S3Service(S3Client s3Client, S3Presigner s3Presigner) {
+		this.s3Client = s3Client;
+		this.s3Presigner = s3Presigner;
+	}
+
+	public String uploadFile(MultipartFile file) throws IOException
+	{
+		String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+		PutObjectRequest putObjectRequest = PutObjectRequest.builder().bucket(bucketName).key(fileName)
+				.contentType(file.getContentType()).build();
+
+		s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+
+		// PRO TIP: Store only the filename (key) in your DB, not the full URL
+		return fileName;
+	}
+
+	public String getPresignedUrl(String key)
+	{
+		if (key == null || key.isBlank())
+			return null;
+
+		GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucketName).key(key).build();
+
+		GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+				.signatureDuration(Duration.ofMinutes(15)) // Link valid for 15 mins
+				.getObjectRequest(getObjectRequest).build();
+
+		return s3Presigner.presignGetObject(presignRequest).url().toString();
+	}
+
+	public void deleteFile(String key)
+	{
+		// Since we store only the key now, no more substring manipulation needed!
+		DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().bucket(bucketName).key(key).build();
+
+		s3Client.deleteObject(deleteObjectRequest);
+	}
+}

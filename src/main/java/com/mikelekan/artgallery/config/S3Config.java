@@ -10,7 +10,8 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 @Configuration
-public class S3Config {
+public class S3Config
+{
 
 	@Value("${aws.access.key}")
 	private String accessKey;
@@ -22,23 +23,22 @@ public class S3Config {
 	private String region;
 
 	@Bean
-	public AwsBasicCredentials awsCredentials() {
+	public AwsBasicCredentials awsCredentials()
+	{
 		return AwsBasicCredentials.create(accessKey, secretKey);
 	}
 
 	@Bean
-	public S3Client s3Client() {
-		return S3Client.builder()
-				.region(Region.of(region))
-				.credentialsProvider(StaticCredentialsProvider.create(awsCredentials()))
-				.build();
+	public S3Client s3Client()
+	{
+		return S3Client.builder().region(Region.of(region))
+				.credentialsProvider(StaticCredentialsProvider.create(awsCredentials())).build();
 	}
 
 	@Bean
-	public S3Presigner s3Presigner() {
-		return S3Presigner.builder()
-				.region(Region.of(region))
-				.credentialsProvider(StaticCredentialsProvider.create(awsCredentials()))
-				.build();
+	public S3Presigner s3Presigner()
+	{
+		return S3Presigner.builder().region(Region.of(region))
+				.credentialsProvider(StaticCredentialsProvider.create(awsCredentials())).build();
 	}
 }

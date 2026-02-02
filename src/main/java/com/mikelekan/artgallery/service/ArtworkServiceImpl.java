@@ -18,7 +18,10 @@ public class ArtworkServiceImpl implements ArtworkService
 	@Override
 	public List<ArtWork> getAllArtworks()
 	{
-		return artWorkRepository.findAll();
+		List<ArtWork> list = artWorkRepository.findAll();
+
+		System.out.println("Database found " + list.size() + " artworks.");
+		return list;
 	}
 
 	@Override

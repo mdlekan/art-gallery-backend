@@ -1,5 +1,6 @@
 package com.mikelekan.artgallery.controller;
 
+import com.mikelekan.artgallery.dto.ArtworkResponse;
 import com.mikelekan.artgallery.model.ArtWork;
 import com.mikelekan.artgallery.repository.ArtWorkRepository;
 import com.mikelekan.artgallery.service.ArtworkService;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,9 +30,20 @@ public class ArtWorkController
 	}
 
 	@GetMapping
-	public List<ArtWork> getArtworks()
-	{
-		return artworkService.getAllArtworks();
+	public List<ArtworkResponse> getArtworks() {
+		return artworkService.getAllArtworks().stream()
+				.map(art -> ArtworkResponse.builder()
+						.id(art.getId())
+						.title(art.getTitle())
+						.description(art.getDescription())
+						.artist(art.getArtist())
+						.price(art.getPrice())
+						.sold(art.isSold())
+						.createdAt(art.getCreatedAt())
+						// Generate the URL right here during the mapping!
+						.imageUrl(s3Service.getPresignedUrl(art.getImageUrl()))
+						.build())
+				.collect(Collectors.toList());
 	}
 
 	@PostMapping("/upload")
@@ -57,8 +70,10 @@ public class ArtWorkController
 	{
 		return artWorkRepository.findById(id).map(art -> {
 			// 1. Delete the physical file from S3
-			if (art.getImageUrl() != null && art.getImageUrl().contains("amazonaws.com"))
+			// Simplified Delete logic in Controller
+			if (art.getImageUrl() != null)
 			{
+				// We just pass the key directly now
 				s3Service.deleteFile(art.getImageUrl());
 			}
 

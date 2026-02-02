@@ -1,5 +1,6 @@
 package com.mikelekan.artgallery.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -37,6 +38,7 @@ public class ArtWork
 	private boolean sold = false;
 
 	@OneToOne(mappedBy = "artwork")
+	@JsonIgnore // Stop the infinite loop here!
 	private Order order;
 
 	@PrePersist

@@ -26,18 +26,18 @@ public class Customer
 	@Column(nullable = false)
 	private String lastName;
 
-	@Column(nullable = false)
+	@Column()
 	private String addressLine1;
 
 	private String addressLine2;
 
-	@Column(nullable = false)
+	@Column()
 	private String city;
 
-	@Column(nullable = false)
+	@Column()
 	private String state;
 
-	@Column(nullable = false)
+	@Column()
 	private String zipCode;
 
 	@Column(nullable = false, unique = true)

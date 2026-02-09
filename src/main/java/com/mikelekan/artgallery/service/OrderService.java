@@ -42,52 +42,48 @@ public class OrderService
 		ArtWork artwork = artWorkRepository.findById(request.getArtworkId())
 				.orElseThrow(() -> new RuntimeException("Artwork not found"));
 
-		// 2. Check if artwork is already sold
-		if (artwork.isSold())
-			// This immediately jumps to the GlobalExceptionHandler!
-			throw new AlreadySoldException("Sorry, this masterpiece has already been purchased.");
-
 		Customer customer = customerRepository.findCustomerByEmail(request.getCustomerEmail())
 				.orElseGet(() -> {
-					// If they don't exist, create a new "Guest" record
 					Customer newCustomer = new Customer();
 					newCustomer.setEmail(request.getCustomerEmail());
+					newCustomer.setFirstName(""); // Split name if needed
 					newCustomer.setLastName(request.getCustomerName());
+					// IMPORTANT: If Customer entity requires address, set it here!
 					return customerRepository.save(newCustomer);
 				});
 
-		// 3. Create order
 		Order order = Order.builder()
 				.artwork(artwork)
 				.customer(customer)
 				.customerName(request.getCustomerName())
 				.customerEmail(request.getCustomerEmail())
-				// ... set address fields from request ...
-				.price(artwork.getPrice()) // <-- CRITICAL: Get price from DB, not JSON
+				// Map these address fields to avoid nullable errors!
+				.shippingAddressLine1(request.getShippingAddressLine1())
+				.city(request.getCity())
+				.state(request.getState())
+				.postalCode(request.getPostalCode())
+				.country(request.getCountry())
+				.price(artwork.getPrice())
 				.status(OrderStatus.PENDING)
 				.build();
 
 		Order savedOrder = orderRepository.save(order);
 
-		// 4. Mark artwork as sold (after payment confirmation in real app)
-		// For now, we'll do it immediately
-		artwork.setSold(true);
-		artWorkRepository.save(artwork);
-
-		try
-		{
+		// Initializing Stripe
+		try {
+			// You might want to return a DTO from paymentService
+			// that contains BOTH the ID and the Secret
 			String clientSecret = paymentService.createPaymentIntent(savedOrder);
-			savedOrder.setPaymentIntentId(clientSecret);
-		}
-		catch (StripeException e)
-		{
-			// Log log = new Log
-			// log.error("Failed to create payment intent", e);
-			throw new RuntimeException("Payment initialization failed");
-		}
 
-		// 5. Send confirmation email (implement later)
-		// emailService.sendOrderConfirmation(savedOrder);
+			// Extract the ID (pi_...) from the secret to save in DB
+			String paymentIntentId = clientSecret.split("_secret")[0];
+			savedOrder.setPaymentIntentId(paymentIntentId);
+
+			// You'll need to update OrderResponse to include the clientSecret
+			// so the frontend can actually use it!
+		} catch (StripeException e) {
+			throw new BusinessLogicException("Could not initialize payment: " + e.getMessage());
+		}
 
 		return mapToResponse(savedOrder);
 	}

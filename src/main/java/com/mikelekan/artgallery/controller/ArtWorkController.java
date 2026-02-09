@@ -38,7 +38,6 @@ public class ArtWorkController
 						.description(art.getDescription())
 						.artist(art.getArtist())
 						.price(art.getPrice())
-						.sold(art.isSold())
 						.createdAt(art.getCreatedAt())
 						// Generate the URL right here during the mapping!
 						.imageUrl(s3Service.getPresignedUrl(art.getImageUrl()))

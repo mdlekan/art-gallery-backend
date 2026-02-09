@@ -69,10 +69,6 @@ public class Order
 	@Column(nullable = false)
 	private LocalDateTime updatedAt;
 
-	private Boolean isPaid;
-
-	private String markPaid;
-
 	@PrePersist
 	protected void onCreate()
 	{

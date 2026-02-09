@@ -22,7 +22,8 @@ public class CustomerService
 
 	public Customer findCustomerByEmail(String inCustomerEmail)
 	{
-		return customerRespository.findCustomerByEmail(inCustomerEmail);
+		return customerRespository.findCustomerByEmail(inCustomerEmail)
+				.orElseThrow(() -> new RuntimeException("Customer Not found"));
 	}
 
 	public List<Customer> findAllCustomers()

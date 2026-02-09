@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler
 {
-
 	// Catch specific JWT errors
 	@ExceptionHandler(MalformedJwtException.class)
 	public ResponseEntity<ErrorResponse> handleMalformedJwt(MalformedJwtException ex)
@@ -48,8 +47,8 @@ public class GlobalExceptionHandler
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
-	@ExceptionHandler(BusinessLogicException.class)
-	public ResponseEntity<ErrorResponse> handleBusinessLogic(BusinessLogicException ex)
+	@ExceptionHandler(AlreadySoldException.class)
+	public ResponseEntity<ErrorResponse> handleBusinessLogic(AlreadySoldException ex)
 	{
 		ErrorResponse error = new ErrorResponse(HttpStatus.CONFLICT.value(), // 409 is great for "already exists" or
 																				// "already sold"

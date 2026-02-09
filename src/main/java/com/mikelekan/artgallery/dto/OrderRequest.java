@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class OrderRequest
 {
 	private Long artworkId;
+	private Long customerId;
 
 	// Customer info
 	private String customerName;

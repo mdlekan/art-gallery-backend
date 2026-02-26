@@ -23,13 +23,14 @@ public class PaymentService {
 
     public PaymentService(
             @Value("${stripe_secret_key}") String stripeSecretKey,
-            @Value("${stripe.currency:usd}") String currency
-    ) {
+            @Value("${stripe.currency:usd}") String currency)
+    {
         this.stripeSecretKey = stripeSecretKey;
         this.currency = currency;
     }
 
-    public String createPaymentIntent(Order order) throws StripeException {
+    public String createPaymentIntent(Order order) throws StripeException
+    {
         validateOrder(order);
 
         PaymentService.log.info("Creating payment intent for order ID: {}, amount: ${}",

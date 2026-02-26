@@ -33,6 +33,7 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'com.stripe:stripe-java:31.2.0'
+    testImplementation 'junit:junit:4.13.2'
 
     // Spring Security: Core security framework
     // What it does: Intercepts HTTP requests, manages authentication/authorization

@@ -18,12 +18,11 @@ import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignReques
 public class S3Service
 {
 	private final S3Client s3Client;
-	private final S3Presigner s3Presigner; // Add this
+	private final S3Presigner s3Presigner;
 
 	@Value("${aws_bucket}")
 	private String bucketName;
 
-	// Constructor Injection
 	public S3Service(S3Client s3Client, S3Presigner s3Presigner) {
 		this.s3Client = s3Client;
 		this.s3Presigner = s3Presigner;
@@ -33,12 +32,14 @@ public class S3Service
 	{
 		String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
-		PutObjectRequest putObjectRequest = PutObjectRequest.builder().bucket(bucketName).key(fileName)
-				.contentType(file.getContentType()).build();
+		PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+				.bucket(bucketName)
+				.key(fileName)
+				.contentType(file.getContentType())
+				.build();
 
 		s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
-		// PRO TIP: Store only the filename (key) in your DB, not the full URL
 		return fileName;
 	}
 
@@ -58,7 +59,6 @@ public class S3Service
 
 	public void deleteFile(String key)
 	{
-		// Since we store only the key now, no more substring manipulation needed!
 		DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().bucket(bucketName).key(key).build();
 
 		s3Client.deleteObject(deleteObjectRequest);

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor // ← Lombok generates constructor
 public class CustomerController
 {
-
 	private final CustomerService customerService;
 
 	@GetMapping("/{id}")

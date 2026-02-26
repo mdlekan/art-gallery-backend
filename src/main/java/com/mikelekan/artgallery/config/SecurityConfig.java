@@ -5,6 +5,7 @@ import static org.springframework.http.HttpMethod.POST;
 import com.mikelekan.artgallery.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,12 +33,22 @@ public class SecurityConfig
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
 	{
-		http.cors(cors -> cors.configure(http)).csrf(AbstractHttpConfigurer::disable)
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**", "/error").permitAll()
-						.requestMatchers("/api/auth/**").permitAll() // Login/register
-						.requestMatchers("/api/artworks").permitAll() // View gallery
-						.requestMatchers(POST, "/api/orders").permitAll().requestMatchers(POST, "/api/customers")
-						.permitAll().anyRequest().authenticated())
+		http
+				.cors(cors -> cors.configure(http))
+				// 1. Disable CSRF for webhooks (Required for Stripe)
+				.csrf(csrf -> csrf.ignoringRequestMatchers("/api/webhooks/**"))
+
+				.authorizeHttpRequests(auth -> auth
+						//Public Endpoints (No Token Required)
+						.requestMatchers("/api/auth/**", "/error").permitAll()
+						.requestMatchers("/api/webhooks/**").permitAll()
+						.requestMatchers(HttpMethod.GET, "/api/artworks/**").permitAll()
+						.requestMatchers(HttpMethod.POST, "/api/orders", "/api/customers").permitAll()
+
+						//Catch-all
+						.anyRequest().authenticated()
+				)
+
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

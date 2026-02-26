@@ -2,7 +2,6 @@ package com.mikelekan.artgallery.service;
 
 import com.mikelekan.artgallery.dto.OrderRequest;
 import com.mikelekan.artgallery.dto.OrderResponse;
-import com.mikelekan.artgallery.exception.AlreadySoldException;
 import com.mikelekan.artgallery.exception.BusinessLogicException;
 import com.mikelekan.artgallery.model.ArtWork;
 import com.mikelekan.artgallery.model.Customer;
@@ -118,7 +117,7 @@ public class OrderService
 				.build();
 	}
 
-	public void markAsPaid(Long orderId, String paymentIntentId)
+	public void markAsPaid(Long orderId)
 	{
 		Order order = orderRepository.findById(orderId).orElseThrow(() ->
 				new EntityNotFoundException("Order not found"));

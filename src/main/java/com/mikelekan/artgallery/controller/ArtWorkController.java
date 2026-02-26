@@ -23,14 +23,16 @@ public class ArtWorkController
 	private final ArtWorkRepository artWorkRepository;
 
 	public ArtWorkController(ArtworkService artworkService, S3Service s3Service, ArtWorkRepository artWorkRepository)
-			throws IOException {
+			throws IOException
+	{
 		this.artworkService = artworkService;
 		this.s3Service = s3Service;
 		this.artWorkRepository = artWorkRepository;
 	}
 
 	@GetMapping
-	public List<ArtworkResponse> getArtworks() {
+	public List<ArtworkResponse> getArtworks()
+    {
 		return artworkService.getAllArtworks().stream()
 				.map(art -> ArtworkResponse.builder()
 						.id(art.getId())
@@ -54,7 +56,11 @@ public class ArtWorkController
 		{
 			String imageUrl = s3Service.uploadFile(file);
 
-			ArtWork art = ArtWork.builder().title(title).artist(artist).price(price).description(description)
+			ArtWork art = ArtWork.builder()
+					.title(title)
+					.artist(artist)
+					.price(price)
+					.description(description)
 					.imageUrl(imageUrl).createdAt(LocalDateTime.now()).build();
 			ArtWork savedArt = artWorkRepository.save(art);
 			return ResponseEntity.ok(savedArt);

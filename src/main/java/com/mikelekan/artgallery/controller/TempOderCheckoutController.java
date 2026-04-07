@@ -1,6 +1,5 @@
 package com.mikelekan.artgallery.controller;
 
-
 import com.mikelekan.artgallery.model.Order;
 import com.mikelekan.artgallery.repository.OrderRepository;
 import com.mikelekan.artgallery.service.vendors.PaymentService;
@@ -32,5 +31,4 @@ public class TempOderCheckoutController
 
         return ResponseEntity.ok(checkoutUrl);
     }
-
 }

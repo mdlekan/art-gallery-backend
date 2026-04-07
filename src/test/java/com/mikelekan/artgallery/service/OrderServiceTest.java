@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@ExtendWith(MockitoExtension.class) // The "Magic" that initializes @Mock and @InjectMocks
+@ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
 
     @Mock
@@ -33,7 +33,7 @@ class OrderServiceTest {
     private PaymentService paymentService;
 
     @InjectMocks
-    private OrderService orderService; // This creates the service and "injects" the mocks above into it
+    private OrderService orderService;
     private List<Customer> mockCustomers;
     private List<Order> mockOrders;
 
@@ -134,7 +134,6 @@ class OrderServiceTest {
                         (oldValue, newValue) -> oldValue, LinkedHashMap::new));
 
         System.out.println();
-
     }
 
     @Test

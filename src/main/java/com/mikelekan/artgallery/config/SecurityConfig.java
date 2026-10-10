@@ -36,7 +36,7 @@ public class SecurityConfig
 		http
 				.cors(cors -> cors.configure(http))
 				// 1. Disable CSRF for webhooks (Required for Stripe)
-				.csrf(csrf -> csrf.ignoringRequestMatchers("/api/webhooks/**"))
+				.csrf(AbstractHttpConfigurer::disable)
 
 				.authorizeHttpRequests(auth -> auth
 						//Public Endpoints (No Token Required)

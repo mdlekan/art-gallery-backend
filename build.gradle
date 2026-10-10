@@ -11,7 +11,7 @@ description = 'art-gallery-backend'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(22)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
@@ -38,6 +38,8 @@ dependencies {
     // Spring Security: Core security framework
     // What it does: Intercepts HTTP requests, manages authentication/authorization
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-flyway'
+    runtimeOnly 'org.flywaydb:flyway-database-postgresql'
 
     // JWT Library: Create and validate JWT tokens
     // What it does: Generates signed tokens, verifies signatures, extracts claims

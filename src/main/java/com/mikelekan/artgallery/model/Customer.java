@@ -13,7 +13,7 @@ import lombok.*;
 @Builder
 public class Customer
 {
-	@OneToMany(mappedBy = "customer")
+	@OneToMany(mappedBy = "customer") //mappedBy = "customer" is the field name in the Order class.
 	private List<Order> orders;
 
 	@Id

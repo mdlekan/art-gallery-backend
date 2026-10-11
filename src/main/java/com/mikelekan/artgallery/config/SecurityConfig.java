@@ -39,14 +39,11 @@ public class SecurityConfig
 				.csrf(AbstractHttpConfigurer::disable)
 
 				.authorizeHttpRequests(auth -> auth
-						//Public Endpoints (No Token Required)
-						.requestMatchers("/api/auth/**", "/error").permitAll()
+						.requestMatchers("/api/auth/login", "/error").permitAll()
 						.requestMatchers("/api/webhooks/**").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/artworks/**").permitAll()
-						.requestMatchers(HttpMethod.POST, "/api/orders", "/api/customers").permitAll()
-
-						//Catch-all
-						.anyRequest().authenticated()
+						.requestMatchers(HttpMethod.POST, "/api/orders").permitAll()
+						.anyRequest().hasRole("ADMIN")
 				)
 
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

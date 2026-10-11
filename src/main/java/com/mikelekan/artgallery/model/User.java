@@ -28,13 +28,18 @@ public class User implements UserDetails
 	@Column(nullable = false)
 	private String password; // Added required field
 
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	@Builder.Default
+	private Role role = Role.USER;
+
 	// --- UserDetails Methods ---
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities()
 	{
 		// For now, giving every user a basic "USER" role
-		return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+		return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
 	}
 
 	@Override

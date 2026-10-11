@@ -1,32 +1,32 @@
-// package com.mikelekan.artgallery.config;
-//
-// import com.mikelekan.artgallery.model.ArtWork;
-// import com.mikelekan.artgallery.repository.ArtWorkRepository;
-// import org.springframework.boot.CommandLineRunner;
-// import org.springframework.context.annotation.Bean;
-// import org.springframework.context.annotation.Configuration;
-// import java.math.BigDecimal;
-//
-// @Configuration
-// public class DataInitializer {
-//
-// @Bean
-// CommandLineRunner initDatabase(ArtWorkRepository repository) {
-// return args -> {
-// if (repository.count() == 0) {
-// // Using the builder (Ensure @Builder is on your Artwork entity)
-// ArtWork sample = ArtWork.builder()
-// .title("Starry Night")
-// .artist("Vincent van Gogh")
-// .price(new BigDecimal("1000.00")) // String constructor is safer for
-// BigDecimal
-// .description("A nice painting")
-// .build();
-//
-// repository.save(sample);
-// System.out.println("Data Initialized: Starry Night has been saved.");
-// }
-// };
-// }
-// }
-//
+ package com.mikelekan.artgallery.config;
+
+ import com.mikelekan.artgallery.model.Role;
+ import com.mikelekan.artgallery.model.User;
+ import com.mikelekan.artgallery.repository.UserRepository;
+ import org.springframework.beans.factory.annotation.Value;
+ import org.springframework.boot.CommandLineRunner;
+ import org.springframework.context.annotation.Bean;
+ import org.springframework.context.annotation.Configuration;
+ import org.springframework.security.crypto.password.PasswordEncoder;
+
+ @Configuration
+ public class DataInitializer {
+
+     @Bean
+     CommandLineRunner seedAdmin(UserRepository users, PasswordEncoder encoder,
+                                 @Value("${ADMIN_USERNAME}") String username,
+                                 @Value("${ADMIN_PASSWORD}") String password)
+     {
+         return args -> {
+             User admin = users.findByUserName(username)
+                     .orElseGet(() -> User.builder()
+                             .userName(username)
+                             .password(encoder.encode(password))
+                             .build());
+             admin.setRole(Role.ADMIN);
+             users.save(admin);
+         };
+     }
+ }
+
+

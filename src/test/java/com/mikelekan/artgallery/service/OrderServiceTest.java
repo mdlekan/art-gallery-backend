@@ -96,7 +96,7 @@ class OrderServiceTest {
                 .collect(Collectors.groupingBy(Order::getCustomer, Collectors.counting()))
                 .entrySet()
                 .stream()
-                .max(Map.Entry.comparingByValue())
+                .max((a,b) -> a.getValue().compareTo(b.getValue()))
                 .map(Map.Entry::getKey)
                 .orElse(null);
 
